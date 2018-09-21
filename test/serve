@@ -1,0 +1,2 @@
+#!/bin/bash
+autoreload-server -d ./template/ -p 8080

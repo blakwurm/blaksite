@@ -1,0 +1,2 @@
+{:deps
+ {blaksite {:local/root "../"}}}
