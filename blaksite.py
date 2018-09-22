@@ -5,7 +5,7 @@ from json import dumps, loads
 def getSiteOpts(siteopts_location):
     return loads(open(siteopts_location).read())
 
-def main(siteopts: ("Site Config File" "option" "s") = "siteopts.json"):
+def main(siteopts = "sitesettings.json"):
     print("This is hello world!")
     print(getSiteOpts(siteopts)['pages'][1])
 
