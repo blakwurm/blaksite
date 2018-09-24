@@ -3,34 +3,32 @@
   "tagline": "Where magic happenings come true!",
   "title": "Teeeeest",
   "output": "docs",
-  "pages": [
-    {
+  "pages": {
+    "Blak": {
       "type": "profile",
       "title": "Blak",
       "subtitle": "Dark as Night",
       "url": "blak"
     },
-    {
+    "Wurm": {
       "type": "profile",
       "title": "Wurm",
       "subtitle": "Slithering between the lines",
       "url": "wurm"
     },
-    {
+    "Home": {
       "type": "overview",
       "title": "",
       "subtitle": "Who We Are And What You Do",
       "url": ""
-
     },
-    {
+    "Foobar": {
       "type": "blog",
       "title": "Foo's blog about bar",
       "author": "Tipsy Widdlebiscuits",
       "subtitle": "Because Bar is bar-none!",
       "posts": "foobar",
       "url": "fooblog"
-
     }
-  ]
+  }
 }

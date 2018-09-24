@@ -27,10 +27,9 @@ def passtest(arg):
     return arg
 
 def makenavlist(siteopts):
-    pagenames = list(map(lambda x: x['title'], siteopts['pages']))
     blankbody = BeautifulSoup('', __parser)
     ul = blankbody.new_tag(name ='ul')
-    for page in siteopts['pages']:
+    for pagekey, page in siteopts['pages'].items():
         li = blankbody.new_tag(name = 'li')
         a = blankbody.new_tag(name = 'a', href = page['url'])
         a.append(page['title'])
