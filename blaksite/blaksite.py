@@ -3,6 +3,7 @@ from json import dumps, loads
 from bs4 import BeautifulSoup
 import os
 import shutil
+from wurmforge import WurmForge
 
 __parser = 'html5lib'
 
@@ -27,9 +28,10 @@ def passtest(arg):
     return arg
 
 def makenavlist(siteopts):
+    pagenames = list(map(lambda x: x['title'], siteopts['pages']))
     blankbody = BeautifulSoup('', __parser)
     ul = blankbody.new_tag(name ='ul')
-    for pagekey, page in siteopts['pages'].items():
+    for page in siteopts['pages']:
         li = blankbody.new_tag(name = 'li')
         a = blankbody.new_tag(name = 'a', href = page['url'])
         a.append(page['title'])
