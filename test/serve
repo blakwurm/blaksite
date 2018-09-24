@@ -1,2 +1,2 @@
 #!/bin/bash
-autoreload-server -d ./template/ -p 8080
+autoreload-server -d ./docs -p 8080
