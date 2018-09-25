@@ -71,8 +71,10 @@ def writePage(siteopts, filename, page):
     openfile.close
 
 def main(siteopts = "sitesettings.json"):
-    setupOutput(getSiteSettings(siteopts))
-    print(getSiteSettings(siteopts))
+    forge = WurmForge(siteopts)
+    forge.setupOutput()
+    print(forge)
+    print(forge.makeNavList('index'))
     print(writePage(
         getSiteSettings(siteopts),
         'index.html',
