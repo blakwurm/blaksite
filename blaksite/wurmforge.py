@@ -43,6 +43,11 @@ class WurmForge:
 
     def getSoupFor(filename):
         return BeautifulSoup(open("template/" + filename), __parser)
-    
+
+    def __writePage__(self, filename, pagestring):
+        openfile = open(self.sitesettings['output'] + "/" + filename, "w")
+        openfile.write(pagestring)
+        openfile.close
+        
 
 
