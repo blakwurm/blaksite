@@ -1,6 +1,6 @@
 
 class WurmForge:
-    def __init__(self, siteopts_location):
+    def __init__(self, siteopts_location, parser = 'html5lib'):
         self.sitesettings = loads(open(siteopts_location).read())
         self.__pagefns__ = {"", lambda self, pagekey : "<html><head><title>Someone Goofed</title></head></html>"}
     
@@ -13,6 +13,17 @@ class WurmForge:
         pagefn = __pagefns__[pagedata["type"]]
         result = pagefn(self, pagekey) if (pagefn != None) else __pagefns__[""](self, pagekey)
         return result
+
+    def makenavlist(siteopts):
+        blankbody = BeautifulSoup('', __parser)
+        ul = blankbody.new_tag(name ='ul')
+        for page, pagedata in siteopts['pages'].items():
+            li = blankbody.new_tag(name = 'li')
+            a = blankbody.new_tag(name = 'a', href = pagedata['url'])
+            a.append(pagedata['title'])
+            li.append(a)
+            ul.append(li)
+        return ul
 
     def makeNavList(self, pageon = "index"):
         pagenames = list(map(lambda x: x['title'], siteopts['pages']))
