@@ -5,10 +5,11 @@ import shutil
 
 
 def defaultPageFn(forge, pagekey):
+    "Called when a pagetype doesn't have an associated method regsitered"
     pagebeginning = "<html><head><title>Someone Goofed, "
     pagetype = forge.sitesettings['pages'][pagekey]['type']
     pageend = " doesn't have a function</title></head></html>"
-    return pagebeginning + pagetype + pageend
+    return {pagekey: pagebeginning + pagetype + pageend}
 
 
 class WurmForge:
@@ -19,10 +20,18 @@ class WurmForge:
         self.__parser__ = parser
 
     def defPageMethod(self, pagetype, pagefn):
+        """Adds a page method that dispatches on the given pagetype.
+        See defaultPageFn() for an example of a valid page method"""
         self.__pagefns__[pagetype] = pagefn
         return self
 
     def makePage(self, pagekey):
+        """Renders the HTML string for a page in the site
+        Returns a dict of {url_string, html_string}
+        Paramater is the key of the page in sitesettings['pages']
+        Defers actual work of converting page defintions to html,
+            to functions registered with defPageMethod.
+        """
         pagedata = self.sitesettings["pages"][pagekey]
         pagefn = self.__pagefns__.get(pagedata["type"],
                                       self.__default_page_fn__)
@@ -63,7 +72,7 @@ class WurmForge:
         result = {}
         for pagekey, pagedata in self.sitesettings['pages'].items():
             madepage = self.makePage(pagekey) 
-            result[pagekey] = madepage
+            result = {**result, **madepage}
         return result 
 
     def __writePage__(self, filename, pagestring):
