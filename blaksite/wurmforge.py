@@ -2,6 +2,8 @@ from json import dumps, loads
 from bs4 import BeautifulSoup
 from shutil import rmtree, copytree
 from pathlib import Path
+from wurmpage.blog import makeBlogPage
+from wurmpage.overview import makeOverviewPage
 
 
 def defaultPageFn(forge, pagekey):
@@ -17,7 +19,7 @@ class WurmForge:
     def __init__(self, siteopts_location, parser='html5lib'):
         self.sitesettings = loads(open(siteopts_location).read())
         self.__default_page_fn__ = defaultPageFn
-        self.__pagefns__ = {}
+        self.__pagefns__ = {'overview': makeOverviewPage}
         self.__parser__ = parser
 
     def defPageMethod(self, pagetype, pagefn):
@@ -39,8 +41,12 @@ class WurmForge:
         result = pagefn(self, pagekey)
         return result
 
-    def makeBowlOfSoup(self, filename):
-        return BeautifulSoup(open("template/" + filename), self.__parser__)
+    def soupFor(self, filename):
+        with open("template/" + filename) as templatefile:
+            return BeautifulSoup(templatefile, self.__parser__)
+
+    def pageInfoFor(self, pagekey):
+        return self.sitesettings['pages'][pagekey]
 
     def makeNavList(self, pageOn):
         siteopts = self.sitesettings
@@ -57,6 +63,11 @@ class WurmForge:
             li.append(a)
             ul.append(li)
         return ul
+
+    def makeStarterKit(self, pagekey, template_filename = 'index.html'):
+        return (self.pageInfoFor(pagekey),
+                self.soupFor(template_filename),
+                self.makeNavList(pagekey))
 
     def setupOutput(self):
         try:
@@ -77,6 +88,7 @@ class WurmForge:
         return result 
 
     def makeSite(self):
+        """Builds the page dict, and outputs it to sitesettings['output']"""
         pages = self.makePages()
         self.setupOutput()
         for urlstring, htmlstring in pages.items():
@@ -87,10 +99,9 @@ class WurmForge:
 
     def __writePage__(self, file_path, file_name, page_string):
         true_file_path = self.sitesettings['output'] + '/' + file_path
-        filename = Path(true_file_path + '/' + file_name)
-        filepath = Path(true_file_path)
-        filepath.mkdir(parents=True, exist_ok=True)
-        filename.touch(exist_ok=True)
-        with open(filename, "w+") as openfile:
+        true_file_name = true_file_path + '/' + file_name
+        Path(true_file_path).mkdir(parents=True, exist_ok=True)
+        Path(true_file_name).touch(exist_ok=True)
+        with open(true_file_name , "w+") as openfile:
             openfile.write(page_string)
 
