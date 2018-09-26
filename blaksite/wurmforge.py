@@ -1,7 +1,6 @@
 from json import dumps, loads
 from bs4 import BeautifulSoup
-import os
-import shutil
+from shutil import rmtree, copytree
 from pathlib import Path
 
 
@@ -61,10 +60,10 @@ class WurmForge:
 
     def setupOutput(self):
         try:
-            shutil.rmtree(self.sitesettings['output'])
+            rmtree(self.sitesettings['output'])
         except:
             print("No output folder just yet")
-        shutil.copytree("template", self.sitesettings['output'])
+        copytree("template", self.sitesettings['output'])
         return self
 
     def getSoupFor(filename):
@@ -81,7 +80,6 @@ class WurmForge:
         pages = self.makePages()
         self.setupOutput()
         for urlstring, htmlstring in pages.items():
-            print('filename is ' + urlstring)
             self.__writePage__(file_path = urlstring, 
                                file_name = "index.html",
                                page_string = htmlstring)
