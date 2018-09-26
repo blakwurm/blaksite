@@ -74,11 +74,14 @@ def main(siteopts = "sitesettings.json"):
     forge = WurmForge(siteopts)
     forge.setupOutput()
     print(forge)
-    print(forge.makeNavList('index'))
+    print(forge.sitesettings['pages'])
+    print(forge.makeNavList('Home'))
     print(writePage(
         getSiteSettings(siteopts),
         'index.html',
         str(makeMainPage(getSiteSettings(siteopts)))))
+    print(forge.makePage('Home'))
+    print(forge.makePages())
     print("page names")
     print(makenavlist(getSiteSettings(siteopts)))
 
