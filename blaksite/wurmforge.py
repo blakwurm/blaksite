@@ -2,6 +2,7 @@ from json import dumps, loads
 from bs4 import BeautifulSoup
 import os
 import shutil
+from pathlib import Path
 
 
 def defaultPageFn(forge, pagekey):
@@ -9,7 +10,8 @@ def defaultPageFn(forge, pagekey):
     pagebeginning = "<html><head><title>Someone Goofed, "
     pagetype = forge.sitesettings['pages'][pagekey]['type']
     pageend = " doesn't have a function</title></head></html>"
-    return {pagekey: pagebeginning + pagetype + pageend}
+    urlstring = forge.sitesettings['pages'][pagekey]['url']
+    return {urlstring: pagebeginning + pagetype + pageend}
 
 
 class WurmForge:
@@ -75,8 +77,22 @@ class WurmForge:
             result = {**result, **madepage}
         return result 
 
-    def __writePage__(self, filename, pagestring):
-        openfile = open(self.sitesettings['output'] + "/" + filename, "w")
-        openfile.write(pagestring)
-        openfile.close
+    def makeSite(self):
+        pages = self.makePages()
+        self.setupOutput()
+        for urlstring, htmlstring in pages.items():
+            print('filename is ' + urlstring)
+            self.__writePage__(file_path = urlstring, 
+                               file_name = "index.html",
+                               page_string = htmlstring)
+        return self
+
+    def __writePage__(self, file_path, file_name, page_string):
+        true_file_path = self.sitesettings['output'] + '/' + file_path
+        filename = Path(true_file_path + '/' + file_name)
+        filepath = Path(true_file_path)
+        filepath.mkdir(parents=True, exist_ok=True)
+        filename.touch(exist_ok=True)
+        with open(filename, "w+") as openfile:
+            openfile.write(page_string)
 
