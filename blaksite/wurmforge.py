@@ -4,6 +4,7 @@ from shutil import rmtree, copytree
 from pathlib import Path
 from wurmpage.blog import makeBlogPage
 from wurmpage.overview import makeOverviewPage
+from gfm import gfm, markdown
 
 
 def defaultPageFn(forge, pagekey):
@@ -16,11 +17,11 @@ def defaultPageFn(forge, pagekey):
 
 
 class WurmForge:
-    def __init__(self, siteopts_location, parser='html5lib'):
+    def __init__(self, siteopts_location):
         self.sitesettings = loads(open(siteopts_location).read())
         self.__default_page_fn__ = defaultPageFn
         self.__pagefns__ = {'overview': makeOverviewPage}
-        self.__parser__ = parser
+        self.__parser__ = 'html5lib' 
 
     def defPageMethod(self, pagetype, pagefn):
         """Adds a page method that dispatches on the given pagetype.
@@ -77,8 +78,23 @@ class WurmForge:
         copytree("template", self.sitesettings['output'])
         return self
 
-    def getSoupFor(filename):
-        return BeautifulSoup(open("template/" + filename), __parser)
+    def getSoupFor(self, filename):
+        return BeautifulSoup(open(self.sitesettings['templatelocation'] 
+            + '/'
+            + filename),
+            self.__parser__)
+
+    def strainMarkdown(self, markdown_location):
+        with open(self.sitesettings['medialocation'] 
+                + '/' + markdown_location, 'r') as markdownfile:
+            renderedMarkdown = markdown(gfm(markdownfile.read()))
+            # Hardcoded parser, as the output of 
+            newsoup = BeautifulSoup(renderedMarkdown, self.__parser__)
+            container = newsoup.body
+            container.name = 'div'
+            container['class'] = 'mdrender'
+            return container
+
 
     def makePages(self):
         result = {}

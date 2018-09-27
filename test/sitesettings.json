@@ -3,6 +3,8 @@
   "tagline": "Where magic happenings come true!",
   "title": "Teeeeest",
   "output": "docs",
+  "medialocation": "media",
+  "templatelocation": "template",
   "pageorder": ["Home", "Blak", "Wurm", "Foobar"],
   "pages": {
     "Blak": {
