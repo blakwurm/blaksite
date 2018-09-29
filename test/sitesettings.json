@@ -6,6 +6,7 @@
   "medialocation": "media",
   "templatelocation": "template",
   "pageorder": ["Home", "Blak", "Wurm", "Foobar"],
+  "hosts": "",
   "pages": {
     "Blak": {
       "type": "profile",

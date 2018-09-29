@@ -1,9 +1,6 @@
 from json import dumps, loads
-from bs4 import BeautifulSoup
 from shutil import rmtree, copytree
 from pathlib import Path
-from wurmpages import makeSimplePage
-from gfm import gfm, markdown
 
 
 def defaultPageFn(forge, pagekey):
@@ -17,10 +14,11 @@ def defaultPageFn(forge, pagekey):
 
 class WurmForge:
     def __init__(self, siteopts_location):
-        self.sitesettings = loads(open(siteopts_location).read())
-        self.__default_page_fn__ = defaultPageFn
-        self.__pagefns__ = {'simple': makeSimplePage}
-        self.__parser__ = 'html5lib' 
+        with open(siteopts_location) as siteopts_file:
+            self.sitesettings = loads(siteopts_file.read())
+            self.__default_page_fn__ = defaultPageFn
+            self.__pagefns__ = {}
+            self.__parser__ = 'html5lib' 
 
     def defPageMethod(self, pagetype, pagefn):
         """Adds a page method that dispatches on the given pagetype.
@@ -41,33 +39,10 @@ class WurmForge:
         result = pagefn(self, pagekey)
         return result
 
-    def soupFor(self, filename):
-        with open("template/" + filename) as templatefile:
-            return BeautifulSoup(templatefile, self.__parser__)
 
     def pageInfoFor(self, pagekey):
         return self.sitesettings['pages'][pagekey]
 
-    def makeNavList(self, pageOn):
-        siteopts = self.sitesettings
-        blankbody = BeautifulSoup('', self.__parser__)
-        pageorder = siteopts['pageorder']
-        ul = blankbody.new_tag(name='ul')
-        for page in pageorder:
-            pagedata = siteopts['pages'][page]
-            li = blankbody.new_tag(name='li')
-            if pageOn == page:
-                li['class'] = ["hello"]
-            a = blankbody.new_tag(name='a', href=pagedata['url'])
-            a.append(pagedata['title'])
-            li.append(a)
-            ul.append(li)
-        return ul
-
-    def makeStarterKit(self, pagekey, template_filename = 'index.html'):
-        return (self.pageInfoFor(pagekey),
-                self.soupFor(template_filename),
-                self.makeNavList(pagekey))
 
     def setupOutput(self):
         try:
@@ -76,24 +51,6 @@ class WurmForge:
             print("No output folder just yet")
         copytree("template", self.sitesettings['output'])
         return self
-
-    def getSoupFor(self, filename):
-        return BeautifulSoup(open(self.sitesettings['templatelocation'] 
-            + '/'
-            + filename),
-            self.__parser__)
-
-    def strainMarkdown(self, markdown_location):
-        with open(self.sitesettings['medialocation'] 
-                + '/' + markdown_location, 'r') as markdownfile:
-            renderedMarkdown = markdown(gfm(markdownfile.read()))
-            # Hardcoded parser, as the output of 
-            newsoup = BeautifulSoup(renderedMarkdown, self.__parser__)
-            container = newsoup.body
-            container.name = 'div'
-            container['class'] = 'mdrender'
-            return container
-
 
     def makePages(self):
         result = {}
