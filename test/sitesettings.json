@@ -20,7 +20,7 @@
       "url": "wurm"
     },
     "Home": {
-      "type": "overview",
+      "type": "simple",
       "title": "Home",
       "subtitle": "Who We Are And What You Do",
       "url": "/"

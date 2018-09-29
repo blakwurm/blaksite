@@ -2,7 +2,7 @@ from json import dumps, loads
 from bs4 import BeautifulSoup
 from shutil import rmtree, copytree
 from pathlib import Path
-from wurmpages import makeOverviewPage
+from wurmpages import makeSimplePage
 from gfm import gfm, markdown
 
 
@@ -19,7 +19,7 @@ class WurmForge:
     def __init__(self, siteopts_location):
         self.sitesettings = loads(open(siteopts_location).read())
         self.__default_page_fn__ = defaultPageFn
-        self.__pagefns__ = {'overview': makeOverviewPage}
+        self.__pagefns__ = {'simple': makeSimplePage}
         self.__parser__ = 'html5lib' 
 
     def defPageMethod(self, pagetype, pagefn):
