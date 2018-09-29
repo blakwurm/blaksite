@@ -7,16 +7,18 @@ def soupFor(forge, filename):
     with open("template/" + filename) as templatefile:
         return BeautifulSoup(templatefile, __bs4parser__)
 
+def markdownToSoup(markdownstring):
+    renderedMarkdown = markdown(gfm(markdownstring))
+    newsoup = BeautifulSoup(renderedMarkdown, __bs4parser__)
+    container = newsoup.body
+    container.name = 'span'
+    container['class'] = 'mdrender'
+    return container
+
 def strainMarkdown(self, markdown_location):
-       with open(self.sitesettings['medialocation'] 
+    with open(self.sitesettings['medialocation'] 
             + '/' + markdown_location, 'r') as markdownfile:
-        renderedMarkdown = markdown(gfm(markdownfile.read()))
-        # Hardcoded parser, as the output of 
-        newsoup = BeautifulSoup(renderedMarkdown, __bs4parser__)
-        container = newsoup.body
-        container.name = 'div'
-        container['class'] = 'mdrender'
-        return container
+        return markdownToSoup(markdownfile.read())
 
 def makeNavList(self, pageOn):
     siteopts = self.sitesettings
