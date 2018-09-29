@@ -4,3 +4,4 @@ blbl.*
 *.pyc
 __pycache__
 test/docs/
+vimyank.tmp

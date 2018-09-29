@@ -2,8 +2,7 @@ from json import dumps, loads
 from bs4 import BeautifulSoup
 from shutil import rmtree, copytree
 from pathlib import Path
-from wurmpage.blog import makeBlogPage
-from wurmpage.overview import makeOverviewPage
+from wurmpages import makeOverviewPage
 from gfm import gfm, markdown
 
 
