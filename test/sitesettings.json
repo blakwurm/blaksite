@@ -9,19 +9,22 @@
   "hosts": "",
   "pages": {
     "Blak": {
-      "type": "profile",
+      "type": "simple",
+      "source": "blakprofile.md",
       "title": "Blak",
       "subtitle": "Dark as Night",
       "url": "blak"
     },
     "Wurm": {
-      "type": "profile",
+      "type": "simple",
+      "source": "wurmprofile.md",
       "title": "Wurm",
       "subtitle": "Slithering between the lines",
       "url": "wurm"
     },
     "Home": {
       "type": "simple",
+      "source": "siteintro.md",
       "title": "Home",
       "subtitle": "Who We Are And What You Do",
       "url": "/"

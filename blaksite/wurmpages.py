@@ -5,11 +5,14 @@ from gfm import gfm, markdown
 def makeSimplePage(forge, pagekey):
     pagedef, soup = makeStarterKit(forge, pagekey)
     select = soup.select_one
-    md1 = strainMarkdown(forge, 'siteintro.md')
+    md1 = strainMarkdown(forge, pagedef['source'])
     pagemain = select('#pagemain')
     pagemain.clear()
     pagemain.append(md1)
     return {pagedef['url']: str(soup)}
+
+def makeMediaLink(forge, filename):
+    return forge.sitesettings['medialocation'] + "/" + "filename"
 
 def soupFor(forge, filename):
     with open("template/" + filename) as templatefile:
