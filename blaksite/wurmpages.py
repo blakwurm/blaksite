@@ -3,6 +3,9 @@ from gfm import gfm, markdown
 from json import dumps, loads
 from copy import copy
 from urllib.parse import quote
+from re import compile
+from contextlib import suppress
+from itertools import tee, islice, chain
 
 
 def makeSimplePage(forge, pagekey):
@@ -21,17 +24,35 @@ def makeBlogPage(forge, pagekey):
     select = soup.select_one
     rendermap = {}
     posts = grabBlogPosts(forge, pagekey)
-    for post in posts:
-        rendermap.update(makeBlogPost(forge, pagekey, post))
+    posts.sort(key = lambda x: x['date'], reverse = True)
+    for formerpost, post, nextpost in previous_and_next(posts):
+        rendermap.update(makeBlogPost(forge, pagekey, post, formerpost, nextpost))
     rendermap.update(makeBlogOverview(forge, pagekey, posts))
     return rendermap
 
-def makeBlogPost(forge, pagekey, postdef):
+def makeBlogPost(forge, pagekey, postdef = {}, formerpostdef = {}, nextpostdef = {}):
     pagedef, soup = makeStarterKit(forge, pagekey, 'blogpost.html')
+    select = soup.select_one
+    soup.head.title.string = soup.head.title.string +\
+            " - " + postdef['title']
+    pagetitle = postdef['title']
+    with suppress(Exception):
+        h1 = postdef['soup'].h1.extract()
+        pagetitle = h1.string
+    select('.pagetitle').string = pagetitle
+    postsoup = postdef['soup']
+    pagemain = select('.pagecontent')
+    pagemain.clear()
+    pagemain.append(postdef['soup'])
+    select('.previouspost')['href'] =\
+            formerpostdef['url'] if formerpostdef else postdef['url']
+    select('.nextpost')['href'] =\
+            nextpostdef['url'] if nextpostdef else postdef['url']
+    select('.postdate').string = postdef['date']
 
     return {postdef['url']: str(soup)}
 
-def makeBlogOverview(forge, pagekey, posts, url = ''):
+def makeBlogOverview(forge, pagekey, posts = [], url = ''):
     pagedef, soup = makeStarterKit(forge, pagekey, "blogsummary.html")
     trueurl = url or pagedef['url']
     select = soup.select_one
@@ -43,7 +64,6 @@ def makeBlogOverview(forge, pagekey, posts, url = ''):
         select('.pagecontent').append(slot)
     return {trueurl : str(soup)}
 
-
 def makeBlogOverviewSlot(pagedef, post, template):
     select = template.select_one
     select('.posttitle').string = post['title']
@@ -52,10 +72,8 @@ def makeBlogOverviewSlot(pagedef, post, template):
     select('.preview').string = post['soup'].p.string
     for a in template.select(".continue"):
         a['href'] = post['url']
-        print("url is " + post['url'])
+        print("url is " + a['href'])
     return template
-
-    
 
 def makeMediaLink(forge, filename):
     return forge.sitesettings['medialocation'] + "/" + "filename"
@@ -73,9 +91,14 @@ def grabBlogPosts(forge, pagekey):
     for postdef in postsdefs:
         processPostDef(postslocation, pagesettings, postdef)
     return postsdefs
+
+def removeSpecialChars(title):
+    reg = compile('[^a-zA-Z0-9]')
+    return reg.sub('', title)
         
 def makePostUrl(pagedef, post):
-    return '/' + pagedef['url'] + '/posts/' + post['date'] + '/' + quote(post['title'])
+    return '/' + pagedef['url'] + '/posts/' +\
+            post['date'] + '/' + removeSpecialChars(post['title'])
 
 def processPostDef(postslocation, pagedef, postdef):
     with open(postslocation + "/" + postdef['source']) as mdfile:
@@ -83,7 +106,6 @@ def processPostDef(postslocation, pagedef, postdef):
         postdef['soup'] = postSoup
         postdef['url'] = makePostUrl(pagedef, postdef)
         return postdef
-    
 
 def getPostDefs(postslocation):
     with open(postslocation + '/' + 'posts.json') as postsdef:
@@ -134,5 +156,12 @@ def makeStarterKit(forge, pagekey, template_filename = 'index.html'):
     select('.navbar').replace_with(navlist)
     return (pagedef, soup)
 
+
+def previous_and_next(some_iterable):
+    "https://stackoverflow.com/a/1012089"
+    prevs, items, nexts = tee(some_iterable, 3)
+    prevs = chain([None], prevs)
+    nexts = chain(islice(nexts, 1, None), [None])
+    return zip(prevs, items, nexts)
 
 __bs4parser__ = 'html5lib'

@@ -1,6 +1,7 @@
 from json import dumps, loads
 from shutil import rmtree, copytree
 from pathlib import Path
+from distutils.dir_util import copy_tree
 
 
 def defaultPageFn(forge, pagekey):
@@ -19,6 +20,7 @@ class WurmForge:
             self.__default_page_fn__ = defaultPageFn
             self.__pagefns__ = {}
             self.__parser__ = 'html5lib' 
+            self.__tmpoutput__ = 'blaktmp'
 
     def defPageMethod(self, pagetype, pagefn):
         """Adds a page method that dispatches on the given pagetype.
@@ -45,12 +47,15 @@ class WurmForge:
 
 
     def setupOutput(self):
-        try:
-            rmtree(self.sitesettings['output'])
-        except:
-            print("No output folder just yet")
-        copytree("template", self.sitesettings['output'])
+        #try:
+        #    rmtree(self.sitesettings['output'])
+        #except:
+        #    print("No output folder just yet")
+        copytree("template", self.__tmpoutput__) 
         return self
+
+    def transferTmpToOutput(self):
+        pass
 
     def makePages(self):
         result = {}
@@ -70,7 +75,7 @@ class WurmForge:
         return self
 
     def __writePage__(self, file_path, file_name, page_string):
-        true_file_path = self.sitesettings['output'] + '/' + file_path
+        true_file_path = self.__tmpoutput__ + '/' + file_path
         true_file_name = true_file_path + '/' + file_name
         Path(true_file_path).mkdir(parents=True, exist_ok=True)
         Path(true_file_name).touch(exist_ok=True)

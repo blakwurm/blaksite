@@ -12,7 +12,7 @@ def main(siteopts = "sitesettings.json"):
     forge.defPageMethod('blog', makeBlogPage)
     forge.makeSite()
     #pp.pprint(forge.strainMarkdown('siteintro.md'))
-    #pp.pprint(forge.makePages())
+    pp.pprint(forge.makePages())
 
 if __name__ == '__main__':
     import plac; plac.call(main)
