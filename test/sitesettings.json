@@ -2,6 +2,7 @@
   "name": "Testing Site",
   "tagline": "Where magic happenings come true!",
   "title": "Teeeeest",
+  "titledelimiter": " - ",
   "output": "docs",
   "medialocation": "media",
   "templatelocation": "template",
@@ -35,7 +36,9 @@
       "author": "Tipsy Widdlebiscuits",
       "subtitle": "Because Bar is bar-none!",
       "posts": "foobar",
-      "url": "fooblog"
+      "url": "foo_writes",
+      "postslocation": "blog/foo",
+      "hiddentags": ["politics"]
     }
   }
 }
