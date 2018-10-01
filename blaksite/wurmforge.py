@@ -47,14 +47,15 @@ class WurmForge:
 
 
     def setupOutput(self):
-        #try:
-        #    rmtree(self.sitesettings['output'])
-        #except:
-        #    print("No output folder just yet")
         copytree("template", self.__tmpoutput__) 
         return self
 
-    def transferTmpToOutput(self):
+    def cleanupOutput(self):
+        copy_tree(self.__tmpoutput__, self.sitesettings['output'])
+        try:
+            rmtree(self.__tmpoutput__)
+        except:
+            print("Something is wrong.")
         pass
 
     def makePages(self):
@@ -72,6 +73,7 @@ class WurmForge:
             self.__writePage__(file_path = urlstring, 
                                file_name = "index.html",
                                page_string = htmlstring)
+        self.cleanupOutput()
         return self
 
     def __writePage__(self, file_path, file_name, page_string):

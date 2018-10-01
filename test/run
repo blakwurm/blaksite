@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo ../blaksite/blaksite.py
+../blaksite/blaksite.py
