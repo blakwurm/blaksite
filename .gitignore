@@ -5,3 +5,5 @@ blbl.*
 __pycache__
 test/docs/
 vimyank.tmp
+build/
+dist/
