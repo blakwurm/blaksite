@@ -16,7 +16,9 @@ def defaultPageFn(forge, pagekey):
 class WurmForge:
     def __init__(self, siteopts_location):
         with open(siteopts_location) as siteopts_file:
-            self.sitesettings = loads(siteopts_file.read())
+            sitesettings_tmp = loads(siteopts_file.read())
+            self.sitesettings = {**self.__sitesettings_defaults__,
+                                 **sitesettings_tmp}
             self.__default_page_fn__ = defaultPageFn
             self.__pagefns__ = {}
             self.__parser__ = 'html5lib' 
@@ -84,3 +86,11 @@ class WurmForge:
         with open(true_file_name , "w+") as openfile:
             openfile.write(page_string)
 
+    __sitesettings_defaults__ = \
+            {'output': 'docs',
+             'medialocation': 'media',
+             'templatelocation': 'template',
+             'name': 'Blaksite Default',
+             'tagling': 'Insert tagline here',
+             'title': 'This title is fun!',
+             'titledelimiter': ' - '}
