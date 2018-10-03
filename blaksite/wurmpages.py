@@ -72,7 +72,6 @@ def makeBlogOverviewSlot(pagedef, post, template):
     select('.preview').string = post['soup'].p.string
     for a in template.select(".continue"):
         a['href'] = post['url']
-        print("url is " + a['href'])
     return template
 
 def makeMediaLink(forge, filename):

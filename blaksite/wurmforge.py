@@ -14,6 +14,8 @@ def defaultPageFn(forge, pagekey):
 
 
 class WurmForge:
+    debugFlag = False
+
     def __init__(self, siteopts_location):
         with open(siteopts_location) as siteopts_file:
             sitesettings_tmp = loads(siteopts_file.read())
@@ -30,6 +32,10 @@ class WurmForge:
         self.__pagefns__[pagetype] = pagefn
         return self
 
+    def getPageMethod(self, pagetype):
+        return self.__pagefns__.get(pagetype,
+                                    self.__default_page_fn__)
+
     def makePage(self, pagekey):
         """Renders the HTML string for a page in the site
         Returns a dict of {url_string, html_string}
@@ -38,8 +44,7 @@ class WurmForge:
             to functions registered with defPageMethod.
         """
         pagedata = self.sitesettings["pages"][pagekey]
-        pagefn = self.__pagefns__.get(pagedata["type"],
-                                      self.__default_page_fn__)
+        pagefn = self.getPageMethod(pagedata["type"])
         result = pagefn(self, pagekey)
         return result
 
@@ -57,7 +62,8 @@ class WurmForge:
         try:
             rmtree(self.__tmpoutput__)
         except:
-            print("Something is wrong.")
+            if self.debugFlag:
+                print("Something is wrong.")
         pass
 
     def makePages(self):
