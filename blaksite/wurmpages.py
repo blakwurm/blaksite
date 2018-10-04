@@ -52,6 +52,16 @@ def makeBlogPost(forge, pagekey, postdef = {}, formerpostdef = {}, nextpostdef =
 
     return {postdef['url']: str(soup)}
 
+def postsByTag(posts, tag):
+   for post in posts:
+       if tag in post['tags']:
+           yield post
+
+def postsWithoutTag(posts, tag):
+    for post in posts:
+        if tag not in post['tags']:
+            yield post
+
 def makeBlogOverview(forge, pagekey, posts = [], url = ''):
     pagedef, soup = makeStarterKit(forge, pagekey, "blogsummary.html")
     trueurl = url or pagedef['url']

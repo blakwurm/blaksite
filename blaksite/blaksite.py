@@ -3,8 +3,6 @@ from wurmforge import WurmForge
 from pprint import PrettyPrinter
 from wurmpages import makeSimplePage, makeBlogPage
 
-__parser = 'html5lib'
-
 def main(siteopts = "sitesettings.json", debug:('prints more info', 'flag', 'd') = False):
     pp = PrettyPrinter()
     forge = WurmForge(siteopts)
