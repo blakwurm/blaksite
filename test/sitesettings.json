@@ -38,7 +38,7 @@
       "posts": "foobar",
       "url": "foo_writes",
       "postslocation": "blog/foo",
-      "hiddentags": ["politics"]
+      "hidetag": "politics"
     }
   }
 }

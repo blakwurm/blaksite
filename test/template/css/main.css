@@ -41,13 +41,17 @@ body * {
 
 .navbar {
 	display: block;
+}
+
+.navbar ul {
+	display: block;
 	border-bottom: solid 2px grey;
 	border-top: solid 2px grey;
 	padding-top: 1px;
 	padding-bottom: 3px;
 }
 
-.navbar li {
+.navbar ul li {
 	display: inline;
 	list-style: none;
 }

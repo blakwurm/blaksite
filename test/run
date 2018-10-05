@@ -1,2 +1,2 @@
 #!/bin/bash
-../blaksite/blaksite.py -d
+../blaksite/blaksite.py

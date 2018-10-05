@@ -1,3 +1,5 @@
+plac
 bs4
 gfm
+progressbar2
 

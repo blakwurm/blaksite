@@ -4,14 +4,14 @@
 		"title": "Krieg! Or... Not?",
 		"author": "Alex",
 		"source": "kriegpost.md",
-		"tags": ["satire", "politics", "fluff"]
+		"tags": ["satire", "politics", "fluff", "ephemeral"]
 	},
 	{
 		"date": "2018-03-23",
 		"title": "My best thing",
 		"author": "Alex",
 		"source": "best_.md",
-		"tags": ["jokes", "programming"]
+		"tags": ["jokes", "programming", "ephemeral"]
 	}
 
 ]

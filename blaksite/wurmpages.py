@@ -9,14 +9,15 @@ from itertools import tee, islice, chain
 
 
 def makeSimplePage(forge, pagekey):
-    pagedef, soup = makeStarterKit(forge, pagekey)
-    select = soup.select_one
-    md1 = strainMarkdown(forge, pagedef['source'])
-    pagemain = select('.pagecontent')
-    pagemain.clear()
-    pagemain.append(md1)
-    select('.pagetitle').string = pagedef['title']
-    select('.pagesubtitle').string = pagedef['subtitle']
+    for i in forge.prog(['a'], 'Making ' + pagekey):
+        pagedef, soup = makeStarterKit(forge, pagekey)
+        select = soup.select_one
+        md1 = strainMarkdown(forge, pagedef['source'])
+        pagemain = select('.pagecontent')
+        pagemain.clear()
+        pagemain.append(md1)
+        select('.pagetitle').string = pagedef['title']
+        select('.pagesubtitle').string = pagedef['subtitle']
     return {pagedef['url']: str(soup)}
 
 def makeBlogPage(forge, pagekey):
@@ -25,17 +26,35 @@ def makeBlogPage(forge, pagekey):
     rendermap = {}
     posts = grabBlogPosts(forge, pagekey)
     posts.sort(key = lambda x: x['date'], reverse = True)
-    for formerpost, post, nextpost in previous_and_next(posts):
+    tags = getTagsIn(forge, posts)
+    pagedef['tags'] = tags
+    for formerpost, post, nextpost \
+            in previous_and_next(forge.prog(posts,
+                'Making ' + pagekey + ' post pages')):
         rendermap.update(makeBlogPost(forge, pagekey, post, formerpost, nextpost))
-    rendermap.update(makeBlogOverview(forge, pagekey, posts))
+    for tag in forge.prog(tags, 'Making ' + pagekey + ' tag pages'):
+        rendermap.update(makeBlogOverview(forge,
+            pagekey,
+            postsWithTag(posts, tag),
+            makeBlogTagURL(forge, pagekey, tag)))
+    rendermap.update(makeBlogOverview(forge, pagekey, postsWithoutTag(posts, pagedef["hidetag"])))
     return rendermap
 
-def makeBlogPost(forge, pagekey, postdef = {}, formerpostdef = {}, nextpostdef = {}):
+def makeBlogTagURL(forge, pagekey, tag):
+    return forge.sitesettings['pages'][pagekey]['url'] + '/tag/' + tag
+
+def makeBlogPost(forge, pagekey,
+        postdef = {},
+        formerpostdef = {},
+        nextpostdef = {}):
     pagedef, soup = makeStarterKit(forge, pagekey, 'blogpost.html')
     select = soup.select_one
     soup.head.title.string = soup.head.title.string +\
             " - " + postdef['title']
     pagetitle = postdef['title']
+    with suppress(Exception):
+        select('.taglist').ul.\
+                replace_with(makeTagUL(forge, pagekey, pagedef['tags']))
     with suppress(Exception):
         h1 = postdef['soup'].h1.extract()
         pagetitle = h1.string
@@ -48,25 +67,27 @@ def makeBlogPost(forge, pagekey, postdef = {}, formerpostdef = {}, nextpostdef =
             formerpostdef['url'] if formerpostdef else postdef['url']
     select('.nextpost')['href'] =\
             nextpostdef['url'] if nextpostdef else postdef['url']
-    select('.postdate').string = postdef['date']
-
+    select('.postdate').string = postdef['date'] 
     return {postdef['url']: str(soup)}
 
-def postsByTag(posts, tag):
-   for post in posts:
-       if tag in post['tags']:
-           yield post
+def postsWithTag(posts, tag):
+    return [post for post in posts if tag in post['tags']]
 
 def postsWithoutTag(posts, tag):
-    for post in posts:
-        if tag not in post['tags']:
-            yield post
+    return [post for post in posts if tag not in post['tags']]
+
+def getTagsIn(forge, posts):
+    retList = []
+    for post in forge.prog(posts, 'Getting tags from posts'):
+        retList.extend(post['tags'])
+    return retList
 
 def makeBlogOverview(forge, pagekey, posts = [], url = ''):
     pagedef, soup = makeStarterKit(forge, pagekey, "blogsummary.html")
     trueurl = url or pagedef['url']
     select = soup.select_one
     previewtemplate = select('.postpreview').extract()
+    select('.taglist').ul.replace_with(makeTagUL(forge, pagekey, pagedef['tags']))
     def newTemplate():
         return copy(previewtemplate)
     for post in posts:
@@ -97,7 +118,7 @@ def grabBlogPosts(forge, pagekey):
     mediapath = forge.sitesettings['medialocation']
     postslocation = mediapath + '/' + postspath 
     postsdefs = getPostDefs(postslocation)
-    for postdef in postsdefs:
+    for postdef in forge.prog(postsdefs, 'Processing ' + pagekey + ' posts'):
         processPostDef(postslocation, pagesettings, postdef)
     return postsdefs
 
@@ -106,7 +127,7 @@ def removeSpecialChars(title):
     return reg.sub('', title)
         
 def makePostUrl(pagedef, post):
-    return '/' + pagedef['url'] + '/posts/' +\
+    return '/' + pagedef['url'] + '/post/' +\
             post['date'] + '/' + removeSpecialChars(post['title'])
 
 def processPostDef(postslocation, pagedef, postdef):
@@ -138,14 +159,26 @@ def makeNavList(forge, pageOn):
     blankbody = BeautifulSoup('', __bs4parser__)
     pageorder = forge.sitesettings['pageorder']
     ul = blankbody.new_tag(name='ul')
-    ul['class'] = ['navbar']
+    #ul['class'] = ['navbar']
     for page in pageorder:
         pagedata =forge.sitesettings['pages'][page]
         li = blankbody.new_tag(name='li')
         if pageOn == page:
             li['class'] = ["hello"]
-        a = blankbody.new_tag(name='a', href=pagedata['url'])
+        a = blankbody.new_tag(name='a', href='/' + pagedata['url'])
         a.append(pagedata['title'])
+        li.append(a)
+        ul.append(li)
+    return ul
+
+def makeTagUL(forge, pagekey, tags):
+    blankbody = BeautifulSoup('', __bs4parser__)
+    ul = blankbody.new_tag(name='ul')
+    for tag in tags:
+        li = blankbody.new_tag(name='li')
+        url = makeBlogTagURL(forge, pagekey, tag)
+        a = blankbody.new_tag(name='a', href='/' + url)
+        a.append(tag)
         li.append(a)
         ul.append(li)
     return ul
@@ -162,7 +195,7 @@ def makeStarterKit(forge, pagekey, template_filename = 'index.html'):
     select = soup.select_one
     select('title').string = makePageTitle(forge, pagekey)
     select('.sitetitle').string = forge.sitesettings['name']
-    select('.navbar').replace_with(navlist)
+    select('.navbar').ul.replace_with(navlist)
     return (pagedef, soup)
 
 

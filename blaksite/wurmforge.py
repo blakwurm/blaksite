@@ -2,6 +2,7 @@ from json import dumps, loads
 from shutil import rmtree, copytree
 from pathlib import Path
 from distutils.dir_util import copy_tree
+from progressbar import progressbar
 
 
 def defaultPageFn(forge, pagekey):
@@ -25,6 +26,10 @@ class WurmForge:
             self.__pagefns__ = {}
             self.__parser__ = 'html5lib' 
             self.__tmpoutput__ = 'blaktmp'
+
+    def prog(self, seq, desc): 
+        print(desc)
+        return progressbar(seq)
 
     def defPageMethod(self, pagetype, pagefn):
         """Adds a page method that dispatches on the given pagetype.
@@ -77,7 +82,7 @@ class WurmForge:
         """Builds the page dict, and outputs it to sitesettings['output']"""
         pages = self.makePages()
         self.setupOutput()
-        for urlstring, htmlstring in pages.items():
+        for urlstring, htmlstring in self.prog(pages.items(), 'Writing Pages'):
             self.__writePage__(file_path = urlstring, 
                                file_name = "index.html",
                                page_string = htmlstring)
