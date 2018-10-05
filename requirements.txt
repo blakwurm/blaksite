@@ -2,4 +2,5 @@ plac
 bs4
 gfm
 progressbar2
+pyinstaller
 

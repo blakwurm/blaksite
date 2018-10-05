@@ -3,8 +3,8 @@
 block_cipher = None
 
 
-a = Analysis(['blaksite/blaksite.py'],
-             pathex=['/home/alex/dev/blaksite.py'],
+a = Analysis(['blaksite\\blaksite.py'],
+             pathex=['C:\\Users\\achyt\\dev\\blaksite'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -29,4 +29,4 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           runtime_tmpdir=None,
-          console=True )
+          console=True , icon='blakwurmlogo.ico')
