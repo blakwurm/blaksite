@@ -58,6 +58,9 @@ def makeBlogPost(forge, pagekey,
     with suppress(Exception):
         h1 = postdef['soup'].h1.extract()
         pagetitle = h1.string
+    tagul = makeTagUL(forge, pagekey, postdef['tags'])
+    select('.taglist').ul.replace_with(tagul)
+
     select('.pagetitle').string = pagetitle
     postsoup = postdef['soup']
     pagemain = select('.pagecontent')
@@ -91,16 +94,18 @@ def makeBlogOverview(forge, pagekey, posts = [], url = ''):
     def newTemplate():
         return copy(previewtemplate)
     for post in posts:
-        slot = makeBlogOverviewSlot(pagedef, post, newTemplate())
+        slot = makeBlogOverviewSlot(forge, pagekey, post, newTemplate())
         select('.pagecontent').append(slot)
     return {trueurl : str(soup)}
 
-def makeBlogOverviewSlot(pagedef, post, template):
+def makeBlogOverviewSlot(forge, pagekey, post, template):
+    pagedef = forge.sitesettings['pages'][pagekey]
     select = template.select_one
     select('.posttitle').string = post['title']
     select('.byline').string = post['author']
     select('.date').string = post['date']
     select('.preview').string = post['soup'].p.string
+    select('.tags').replace_with(makeTagUL(forge, pagekey, post['tags']))
     for a in template.select(".continue"):
         a['href'] = post['url']
     return template
@@ -174,6 +179,7 @@ def makeNavList(forge, pageOn):
 def makeTagUL(forge, pagekey, tags):
     blankbody = BeautifulSoup('', __bs4parser__)
     ul = blankbody.new_tag(name='ul')
+    ul['class'] = ['tags']
     for tag in tags:
         li = blankbody.new_tag(name='li')
         url = makeBlogTagURL(forge, pagekey, tag)
