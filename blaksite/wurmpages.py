@@ -6,9 +6,11 @@ from urllib.parse import quote
 from re import compile
 from contextlib import suppress
 from itertools import tee, islice, chain
+from datetime import datetime
 
 
 def makeSimplePage(forge, pagekey):
+    """Page method for 'simple' page type"""
     for i in forge.prog(['a'], 'Making ' + pagekey):
         pagedef, soup = makeStarterKit(forge, pagekey)
         select = soup.select_one
@@ -21,6 +23,7 @@ def makeSimplePage(forge, pagekey):
     return {pagedef['url']: str(soup)}
 
 def makeBlogPage(forge, pagekey):
+    """Page method for 'blog' page type"""
     pagedef, soup = makeStarterKit(forge, pagekey)
     select = soup.select_one
     rendermap = {}
@@ -41,7 +44,7 @@ def makeBlogPage(forge, pagekey):
     return rendermap
 
 def makeBlogTagURL(forge, pagekey, tag):
-    return forge.sitesettings['pages'][pagekey]['url'] + '/tag/' + tag
+    return forge.pageInfoFor(pagekey)['url'] + '/tag/' + tag
 
 def makeBlogPost(forge, pagekey,
         postdef = {},
@@ -99,7 +102,7 @@ def makeBlogOverview(forge, pagekey, posts = [], url = ''):
     return {trueurl : str(soup)}
 
 def makeBlogOverviewSlot(forge, pagekey, post, template):
-    pagedef = forge.sitesettings['pages'][pagekey]
+    pagedef = forge.pageInfoFor(pagekey)
     select = template.select_one
     select('.posttitle').string = post['title']
     select('.byline').string = post['author']
@@ -111,14 +114,14 @@ def makeBlogOverviewSlot(forge, pagekey, post, template):
     return template
 
 def makeMediaLink(forge, filename):
-    return forge.sitesettings['medialocation'] + "/" + "filename"
+    return forge.settingFor('medialocation') + "/" + "filename"
 
 def soupFor(forge, filename):
     with open("template/" + filename) as templatefile:
         return BeautifulSoup(templatefile, __bs4parser__)
 
 def grabBlogPosts(forge, pagekey):
-    pagesettings = forge.sitesettings['pages'][pagekey]
+    pagesettings = forge.pageInfoFor(pagekey)
     postspath = pagesettings['postslocation']
     mediapath = forge.sitesettings['medialocation']
     postslocation = mediapath + '/' + postspath 
@@ -155,20 +158,20 @@ def markdownToSoup(markdownstring):
     return container
 
 def strainMarkdown(forge, markdown_location):
-    with open(forge.sitesettings['medialocation'] 
+    with open(forge.settingFor('medialocation') 
             + '/' + markdown_location, 'r') as markdownfile:
         return markdownToSoup(markdownfile.read())
 
 def makeNavList(forge, pageOn):
     siteopts = forge.sitesettings
     blankbody = BeautifulSoup('', __bs4parser__)
-    pageorder = forge.sitesettings['pageorder']
+    pageorder = forge.settingFor('pageorder')
     ul = blankbody.new_tag(name='ul')
     #ul['class'] = ['navbar']
-    for page in pageorder:
-        pagedata =forge.sitesettings['pages'][page]
+    for pagekey in pageorder:
+        pagedata =forge.pageInfoFor(pagekey)
         li = blankbody.new_tag(name='li')
-        if pageOn == page:
+        if pageOn == pagekey:
             li['class'] = ["hello"]
         a = blankbody.new_tag(name='a', href='/' + pagedata['url'])
         a.append(pagedata['title'])
@@ -190,18 +193,22 @@ def makeTagUL(forge, pagekey, tags):
     return ul
 
 def makePageTitle(forge, pagekey):
-    return forge.sitesettings['title'] +\
-        forge.sitesettings['titledelimiter'] +\
-        forge.sitesettings['pages'][pagekey]['title']
+    return forge.settingFor('title') +\
+        forge.settingFor('titledelimiter') +\
+        forge.pageInfoFor(pagekey).get('title')
 
 def makeStarterKit(forge, pagekey, template_filename = 'index.html'):
+    """Executes boilerplate common to every page method"""
     soup = soupFor(forge, template_filename)
     navlist = makeNavList(forge, pagekey)
     pagedef = forge.pageInfoFor(pagekey)
+    dt = datetime.now()
     select = soup.select_one
     select('title').string = makePageTitle(forge, pagekey)
     select('.sitetitle').string = forge.sitesettings['name']
-    select('.navbar').ul.replace_with(navlist)
+    select('.navbar').ul.replace_with(navlist) 
+    copyrightholder = forge.settingFor('copyrightholder', 'name')
+    select('.copyright').string = '(c) ' + str(dt.year) + copyrightholder
     return (pagedef, soup)
 
 
@@ -212,4 +219,6 @@ def previous_and_next(some_iterable):
     nexts = chain(islice(nexts, 1, None), [None])
     return zip(prevs, items, nexts)
 
+"""As html5lib does things a bit differently then other html parsers,
+changing this is not advised without rewriting some of the functions in this module"""
 __bs4parser__ = 'html5lib'

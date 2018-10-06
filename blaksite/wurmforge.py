@@ -28,6 +28,8 @@ class WurmForge:
             self.__tmpoutput__ = 'blaktmp'
 
     def prog(self, seq, desc): 
+        """Takes an iterable and a description, returns an iterable that
+        renders a progress bar to the command line."""
         print(desc)
         return progressbar(seq)
 
@@ -38,6 +40,7 @@ class WurmForge:
         return self
 
     def getPageMethod(self, pagetype):
+        "Returns the function for the corresponding pagetype"
         return self.__pagefns__.get(pagetype,
                                     self.__default_page_fn__)
 
@@ -55,14 +58,22 @@ class WurmForge:
 
 
     def pageInfoFor(self, pagekey):
-        return self.sitesettings['pages'][pagekey]
+        """Shortcut for forge.settingFor('page').get(pagekey)"""
+        return self.sitesettings['pages'].get(pagekey, {})
 
+    def settingFor(self, thingkey, altkey = 'name'):
+        """Shortcut for safely getting a site setting with an alternate."""
+        return self.sitesettings.get(thingkey,
+                self.sitesettings.get(altkey, ''))
 
     def setupOutput(self):
+        """Prepares the temp output directory for writing"""
         copytree("template", self.__tmpoutput__) 
         return self
 
     def cleanupOutput(self):
+        """Merges the temp output directory with the target directory,
+        and deletes the temp directory"""
         copy_tree(self.__tmpoutput__, self.sitesettings['output'])
         try:
             rmtree(self.__tmpoutput__)
@@ -72,6 +83,9 @@ class WurmForge:
         pass
 
     def makePages(self):
+        """Returns a dict of {path-relative-to-site-root, html-doc-strings},
+        where path-relative-to-site-root assumes that the recieving server
+        can handle serving the index.html page when asked for a directory"""
         result = {}
         for pagekey, pagedata in self.sitesettings['pages'].items():
             madepage = self.makePage(pagekey) 
@@ -79,7 +93,8 @@ class WurmForge:
         return result 
 
     def makeSite(self):
-        """Builds the page dict, and outputs it to sitesettings['output']"""
+        """Builds the site dict per forge.makePages,
+        and outputs it to sitesettings['output']"""
         pages = self.makePages()
         self.setupOutput()
         for urlstring, htmlstring in self.prog(pages.items(), 'Writing Pages'):
@@ -90,6 +105,7 @@ class WurmForge:
         return self
 
     def __writePage__(self, file_path, file_name, page_string):
+        """Writes an individual page"""
         true_file_path = self.__tmpoutput__ + '/' + file_path
         true_file_name = true_file_path + '/' + file_name
         Path(true_file_path).mkdir(parents=True, exist_ok=True)
@@ -98,7 +114,11 @@ class WurmForge:
             openfile.write(page_string)
 
     __sitesettings_defaults__ = \
-            {'output': 'docs',
+            {'name': 'Unnamed Site',
+             '': '',
+             'title': 'Untitled Site',
+             'tagline': 'Catchy Tagline!',
+             'output': 'docs',
              'medialocation': 'media',
              'templatelocation': 'template',
              'name': 'Blaksite Default',
