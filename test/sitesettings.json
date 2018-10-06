@@ -36,7 +36,6 @@
       "title": "Foo's blog about bar",
       "author": "Tipsy Widdlebiscuits",
       "subtitle": "Because Bar is bar-none!",
-      "posts": "foobar",
       "url": "foo_writes",
       "postslocation": "blog/foo",
       "hidetag": "politics"
