@@ -1,2 +1,0 @@
-#!/bin/bash
-autoreload-server -d ./docs -p 8080

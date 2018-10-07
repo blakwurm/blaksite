@@ -1,10 +1,13 @@
 *.rebel_readline_history
 .cpcache
 blbl.*
+*blbl*
 *.pyc
+*.spec
 __pycache__
 test/docs/
 vimyank.tmp
 build/
 dist/
 blaktmp/
+.vscode/

@@ -1,3 +1,0 @@
-#!/bin/bash
-
-pyinstaller blaksite/blaksite.py --onefile --clean

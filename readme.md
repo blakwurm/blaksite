@@ -1,4 +1,4 @@
-# Blaksite
+# Wurmforge
 
 A terminal (command-line) program that transforms json and markdown into a static site
 
@@ -22,7 +22,7 @@ Below is an explanation of the sitesettings.json requirements. Please refer to t
 | ---------------- | ----------------------------------------------------------------------- | ------------------------------- |
 | name             | Name of the site or orginization                                        | Unnamed Site                    |
 | tagline          | Site subtitle                                                           | Catchy Tagline!                 |
-| title            | Used for the `<title>` element                                          | Untitled Site                   |
+| title            | Used to compute site title                                              | Untitled Site                   |
 | titledelimiter   | Subpages are titled 'title' 'titledelimiter' 'subpagetitle'             | ' - '                           |
 | output           | Directory where the program will output the site. Default is 'docs'     | docs (for github pages support) |
 | medialocation    | Where the program will find images, blog post markdown, etc             | media                           |
