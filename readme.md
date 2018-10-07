@@ -94,7 +94,7 @@ Template files used by this program are complete HTML files. The template engine
 eliminating the need for weird templating placeholders and allowing template designers to generate final template files without a content replacement step.
 This does mean, however, that certain elements must be present within the document.
 
-Note: Unless otherwise specified, only the first instance of each element in the document will be processed. 
+Note: These rules are applied for all elements matching a given selector
 
 ## Used by all templates
 
