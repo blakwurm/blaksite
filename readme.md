@@ -4,7 +4,16 @@ A terminal (command-line) program that transforms json and markdown into a stati
 
 # Use
 
-Evoke the program from within a project directory (folder). The easiest way to do this on Windows is to have the .exe file in the directory and double-click it. 
+` wurmforge target/dir ` (defaults to current directory)
+
+For debugging, pass `-d`
+
+# Quickstart
+
+1. From [releases](https://github.com/blakwurm/blaksite/releases), download the executable for your OS and the 'sample_project.zip' file
+2. Unzip 'sample_project.zip' into your project folder
+3. place executable in project folder
+4. run executable
 
 # Project Setup
 
@@ -136,16 +145,22 @@ Within .postpreview, not necessarily as direct children
 
 # Developing the tool
 
-This tool requires at least Python 3.5 to be installed on the dev system. 
+Requirements: Python 3.5
 
-Clone the repository, and run pip install -r requirements.txt within the repo directory.
+Setup: Clone the repository, and run pip install -r requirements.txt within the repo directory.
 
-Run the code by executing the 'run' script within the 'test' directory. This *does not* run unit tests, but rather executes the program against the test directory as if it were a project.
+Running: Execute runtest/runtest.bat, and check 'test/docs'. This *does not* run unit tests, but rather executes
+the program in debug mode against the test directory as a project. Unit tests are somewhat overkill for this program,
+as checking for accuracy can easily be done by examining the app's output.
 
 Any new functionality must have a corresponding example in the test project.
 
+This project does not use semver. New releases fix bugs and introduce features, but never require more from the user unless they wish
+to use the new features. Sane defaults, careful initial design, etc. The sample_project.zip from v1.0 will be valid for all versions
+of this software.
+
+[A good talk on breakage, though not 100% relivant to Python and a liiiiitle long winded](https://www.youtube.com/watch?v=oyLBGkS5ICk)
+
 ## Building
 
-Both 'compile' and 'compile.bat' have the preferred command for building. At this time, PyInstaller is the preferred method for packing this program for distribution.
-
-The current test directory can serve as an adaquate template for new projects, though one prepared for consumption with a proper release is preferred.
+Run __make.py from within the repo directory. This outputs the executable for your platform, as well as sample_project.zip, into 'dist/'

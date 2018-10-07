@@ -1,3 +1,3 @@
 cd test
-python ../wurmforge/
+python ../wurmforge/ -d
 cd ..
