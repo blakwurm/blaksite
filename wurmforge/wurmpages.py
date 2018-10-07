@@ -204,12 +204,23 @@ def makeStarterKit(forge, pagekey, template_filename = 'index.html'):
     pagedef = forge.pageInfoFor(pagekey)
     dt = datetime.now()
     select = soup.select_one
-    select('title').string = makePageTitle(forge, pagekey)
+    #select('title').string = makePageTitle(forge, pagekey)
+    change(soup, 'title', withstring=makePageTitle(forge, pagekey))
     select('.sitetitle').string = forge.sitesettings['name']
+    with suppress(Exception):
+        select('.rootlink')['href'] = '/' + forge.pageInfoFor('Home')['url']
     select('.navbar').ul.replace_with(navlist) 
     copyrightholder = forge.settingFor('copyrightholder', 'name')
     select('.copyright').string = '(c) ' + str(dt.year) + copyrightholder
     return (pagedef, soup)
+
+def change(soup, selector, deltafn=lambda a: a, withstring='', all=False):
+    with suppress(Exception):
+        select = soup.select if all else soup.select_one
+        if withstring:
+            select(selector).string = withstring
+        else:
+            deltafn(select(selector))
 
 
 def previous_and_next(some_iterable):

@@ -44,6 +44,8 @@ Below is an explanation of the sitesettings.json requirements. Please refer to t
 
 Each entry in the pages map is a map of information
 
+There must be at a page under the "Home" key
+
 | Key  | Description                                                                |
 | ---- | -------------------------------------------------------------------------- |
 | type | Determines what information is required and how the page will be processed |
@@ -57,7 +59,7 @@ Uses 'template/index.html' as template file
 | source   | Path within the 'media' directory pointing to a markdown file, that will be rendered and displayed on the page |
 | title    | Displayed in the page's title, after the delimiter                                                             |
 | subtitle | Displayed on the page as the site's subtitle                                                                   |
-| url      | Directory where the site will be served from. At least one page must be the '/' directory.                     |
+| url      | Directory where the site will be served from.                                                                  |
 
 ### 'blog'
 
@@ -99,6 +101,7 @@ Note: Unless otherwise specified, only the first instance of each element in the
 | Selector     | Use                                                                                                 |
 | ------------ | --------------------------------------------------------------------------------------------------- |
 | title        | Contents replaced by computed title                                                                 |
+| a.rootlink   | href replaced with the url of the "Home" page                                                       |
 | .sitetitle   | Contents replaced by 'name' from sitesettings                                                       |
 | .sitetagline | Contents replaced by 'tagline' from sitesettings                                                    |
 | .navbar ul   | Element replaced by a ul of `<li><a href="/page/path">Page Name</a></li>`, creating site navigation |
