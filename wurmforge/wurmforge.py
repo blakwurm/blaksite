@@ -1,6 +1,6 @@
 from json import dumps, loads
 from shutil import rmtree, copytree
-from pathlib import Path
+from pathlib import Path, PurePath
 from distutils.dir_util import copy_tree
 from progressbar import progressbar
 
@@ -83,9 +83,9 @@ class WurmForge:
         pass
 
     def makePages(self):
-        """Returns a dict of {path-relative-to-site-root, html-doc-strings},
-        where path-relative-to-site-root assumes that the recieving server
-        can handle serving the index.html page when asked for a directory"""
+        """Returns a dict of {path-relative-to-site-root, document-string},
+        where paths ending without a filename are assumed to be directories
+        out of which index.html will be served"""
         result = {}
         for pagekey, pagedata in self.sitesettings['pages'].items():
             madepage = self.makePage(pagekey) 
@@ -98,8 +98,11 @@ class WurmForge:
         pages = self.makePages()
         self.setupOutput()
         for urlstring, htmlstring in self.prog(pages.items(), 'Writing Pages'):
-            self.__writePage__(file_path = urlstring, 
-                               file_name = "index.html",
+            urlpath = PurePath(urlstring)
+            filename = urlpath.name if urlpath.suffix else 'index.html'
+            writepath = str(urlpath.parent) if urlpath.suffix else urlstring
+            self.__writePage__(file_path = writepath, 
+                               file_name = filename,
                                page_string = htmlstring)
         self.cleanupOutput()
         return self
@@ -124,4 +127,5 @@ class WurmForge:
              'name': 'Blaksite Default',
              'tagling': 'Insert tagline here',
              'title': 'This title is fun!',
+             'address': '',
              'titledelimiter': ' - '}

@@ -33,6 +33,7 @@ Below is an explanation of the sitesettings.json requirements. Please refer to t
 | tagline          | Site subtitle                                                           | Catchy Tagline!                 |
 | title            | Used to compute site title                                              | Untitled Site                   |
 | titledelimiter   | Subpages are titled 'title' 'titledelimiter' 'subpagetitle'             | ' - '                           |
+| address          | Primary http/s address from which the site can be addressed.            | ''                              |
 | output           | Directory where the program will output the site. Default is 'docs'     | docs (for github pages support) |
 | medialocation    | Where the program will find images, blog post markdown, etc             | media                           |
 | templatelocation | Where the program will find the template html and css the site uses     | template                        |
@@ -44,7 +45,7 @@ Below is an explanation of the sitesettings.json requirements. Please refer to t
 
 Each entry in the pages map is a map of information
 
-There must be at a page under the "Home" key
+There must be a page under the "Home" key
 
 | Key  | Description                                                                |
 | ---- | -------------------------------------------------------------------------- |
@@ -64,6 +65,8 @@ Uses 'template/index.html' as template file
 ### 'blog'
 
 Uses 'template/blogpost.html' and 'template/blogsummary.html' as template files
+
+If the 'address' field in sitesettings is not empty, an atom feed will be generated for the blog and each tag.
 
 | Key           | Description                                                                                                                     |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------- |

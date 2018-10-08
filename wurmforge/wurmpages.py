@@ -8,6 +8,7 @@ from contextlib import suppress
 from itertools import tee, islice, chain
 from datetime import datetime
 from functools import partial
+from pyatom import AtomFeed
 
 def makeSimplePage(forge, pagekey):
     """Page method for 'simple' page type"""
@@ -24,7 +25,7 @@ def makeBlogPage(forge, pagekey):
     pagedef, soup, change = makeStarterKit(forge, pagekey)
     rendermap = {}
     posts = grabBlogPosts(forge, pagekey)
-    posts.sort(key = lambda x: x['date'], reverse = True)
+    posts.sort(key = lambda x: x['date'])
     tags = getTagsIn(forge, posts)
     pagedef['tags'] = tags
     for formerpost, post, nextpost \
@@ -101,7 +102,30 @@ def makeBlogOverview(forge, pagekey, posts = [], url = ''):
     for post in posts:
         slot = ___makeBlogOverviewSlot(forge, pagekey, post, copy(previewtemplate))
         change('.pagecontent', appendWith(slot))
-    return {trueurl : str(soup)}
+    feeds = __makeFeedsForOverview(forge, pagekey, posts, url)
+    return {trueurl : str(soup), **feeds}
+
+def __makeFeedsForOverview(forge, pagekey, posts, url):
+    if forge.settingFor('address'):
+        filename = 'atom.xml'
+        relpath = url + '/' + filename
+        feedurl = forge.settingFor('address') + '/' + relpath
+        pagedef = forge.pageInfoFor(pagekey)
+        feed = AtomFeed(title=pagedef['title'],
+                        subtitle=pagedef['subtitle'],
+                        feed_url=feedurl,
+                        url = url,
+                        author = pagedef['author']) 
+        for postdef in posts:
+            feed.add(title=postdef['title'],
+                     content=str(postdef['soup']),
+                     content_type = 'xhtml',
+                     author=postdef['author'],
+                     url=forge.settingFor('address') + makePostUrl(pagedef, postdef),
+                     updated=datetime.fromisoformat(postdef['date']))
+        return {relpath: feed.to_string()}
+    else:
+        return {}
 
 def ___makeBlogOverviewSlot(forge, pagekey, post, template):
     pagedef = forge.pageInfoFor(pagekey)
