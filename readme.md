@@ -17,7 +17,17 @@ For debugging, pass `-d`
 
 # Project Setup
 
-A project directory consists of a sitesettings.json file, a directory for 'media' (blog posts, images, etc), a directory for the site's 'template', and somewhere that the program will put the finished site.
+A project directory consists of a sitesettings.json file, several directorys the program will use as input,
+and somewhere that the program will put the finished site.
+
+## Project Structure
+
+| File/Directory | sitesettings key   | Description                                                                      |
+| -------------- | ------------------ | -------------------------------------------------------------------------------- |
+| /template      | "templatelocation" | Location of the site's template. contents (excpet /html) copied to output        |
+| /media         | "medialocation"    | Location of the site's raw files. Directories under "pages" are relative to this |
+| /assets        | "assetlocation"    | Location of the site's asset files. Copied to output directory                   |
+| output         | "output"           | Directory where the program will output the finished site. Default is 'docs'     |
 
 ## sitesettings.json
 
@@ -34,9 +44,10 @@ Below is an explanation of the sitesettings.json requirements. Please refer to t
 | title            | Used to compute site title                                              | Untitled Site                   |
 | titledelimiter   | Subpages are titled 'title' 'titledelimiter' 'subpagetitle'             | ' - '                           |
 | address          | Primary http/s address from which the site can be addressed.            | ''                              |
-| output           | Directory where the program will output the site. Default is 'docs'     | docs (for github pages support) |
-| medialocation    | Where the program will find images, blog post markdown, etc             | media                           |
-| templatelocation | Where the program will find the template html and css the site uses     | template                        |
+| output           | See [Project Structure](#project-structure)                             | docs (for github pages support) |
+| medialocation    | See [Project Structure](#project-structure)                             | media                           |
+| templatelocation | See [Project Structure](#project-structure)                             | template                        |
+| assetslocation   | See [Project Structure](#project-structure)                             | assets                          |
 | copyrightholder  | Used for the copyright line at the bottom of each page                  | value of 'name'                 |
 | pageorder        | List of page keys in the order desired for the site's top-level nav bar | none                            |
 | pages            | Map of one-word key to page specification. More information below       | none                            |
@@ -95,6 +106,7 @@ Each post must have the following information
 
 Template files used by this program are complete HTML files. The template engine uses css selectors to manipulate the document,
 eliminating the need for weird templating placeholders and allowing template designers to generate final template files without a content replacement step.
+
 This does mean, however, that certain elements must be present within the document.
 
 Note: These rules are applied for all elements matching a given selector
@@ -163,7 +175,7 @@ Any new functionality must have a corresponding example in the test project.
 
 This project does not use semver. New releases fix bugs and introduce features, but never require more from the user unless they wish
 to use the new features. Sane defaults, careful initial design, etc. The sample_project.zip from v1.0 will be valid for all versions
-of this software.
+of this software. To facilitate this, releases that are deemed "harmful" can and will be pulled.
 
 [A good talk on breakage, though not 100% relivant to Python and a liiiiitle long winded](https://www.youtube.com/watch?v=oyLBGkS5ICk)
 

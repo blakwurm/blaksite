@@ -68,13 +68,16 @@ class WurmForge:
 
     def setupOutput(self):
         """Prepares the temp output directory for writing"""
-        copytree("template", self.__tmpoutput__) 
+        copytree(self.settingFor('templatelocation'), self.__tmpoutput__) 
+        rmtree(self.__tmpoutput__ + "/html")
+        #copytree(self.settingFor('assetlocation'), self.__tmpoutput__)
         return self
 
     def cleanupOutput(self):
         """Merges the temp output directory with the target directory,
         and deletes the temp directory"""
         copy_tree(self.__tmpoutput__, self.sitesettings['output'])
+        copy_tree(self.settingFor('assetlocation'), self.settingFor('output'))
         try:
             rmtree(self.__tmpoutput__)
         except:
@@ -124,6 +127,7 @@ class WurmForge:
              'output': 'docs',
              'medialocation': 'media',
              'templatelocation': 'template',
+             'assetlocation': 'assets',
              'name': 'Blaksite Default',
              'tagling': 'Insert tagline here',
              'title': 'This title is fun!',

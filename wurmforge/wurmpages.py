@@ -37,7 +37,7 @@ def makeBlogPage(forge, pagekey):
             pagekey,
             postsWithTag(posts, tag),
             makeBlogTagURL(forge, pagekey, tag)))
-    rendermap.update(makeBlogOverview(forge, pagekey, postsWithoutTag(posts, pagedef["hidetag"])))
+    rendermap.update(makeBlogOverview(forge, pagekey, postsWithoutTag(posts, pagedef["hidetag"]), pagedef['url']))
     return rendermap
 
 def makeBlogTagURL(forge, pagekey, tag):
@@ -143,8 +143,8 @@ def makeMediaLink(forge, filename):
     return forge.settingFor('medialocation') + "/" + "filename"
 
 def templateSoupFor(forge, filename):
-    """Returns a new bs4 element for a file in /template"""
-    with open("template/" + filename) as templatefile:
+    """Returns a new bs4 element for a file in /template/html"""
+    with open(forge.settingFor('templatelocation') + "/html/" + filename) as templatefile:
         return BeautifulSoup(templatefile, __bs4parser__)
 
 def grabBlogPosts(forge, pagekey):

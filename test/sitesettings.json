@@ -5,6 +5,7 @@
   "titledelimiter": " - ",
   "output": "docs",
   "medialocation": "media",
+  "assetlocation": "assets",
   "templatelocation": "template",
   "copyrightholder": "Site Operator",
   "pageorder": ["Home", "Blak", "Wurm", "Foobar"],
