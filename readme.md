@@ -151,7 +151,7 @@ Within .postpreview, not necessarily as direct children
 
 # Developing the tool
 
-Requirements: Python 3.5
+Requirements: Python 3.7 or greater
 
 Setup: Clone the repository, and run pip install -r requirements.txt within the repo directory.
 

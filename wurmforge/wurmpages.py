@@ -259,6 +259,7 @@ def makeStarterKit(forge, pagekey, template_filename = 'index.html'):
     #select('title').string = makePageTitle(forge, pagekey)
     change('title', replaceString(makePageTitle(forge, pagekey)))
     change('.sitetitle', replaceString(forge.sitesettings['name']))
+    change('.sitetagline', replaceString(forge.sitesettings['tagline']))
     change('a.rootlink', replaceHref('/' + forge.pageInfoFor('Home')['url']))
     change('.navbar ul', replaceWith(navlist))
     copyrightholder = forge.settingFor('copyrightholder', 'name')
