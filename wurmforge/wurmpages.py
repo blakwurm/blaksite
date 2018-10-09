@@ -64,6 +64,8 @@ def makeBlogPost(forge, pagekey,
         h1 = postdef['soup'].h1.extract()
         pagetitle = h1.string
     tagul = makeTagUL(forge, pagekey, postdef['tags'])
+    print('tagul is ' + str(tagul))
+    change('.tags', replaceWith(tagul))
     change('.taglist ul', replaceWith(tagul))
     change('.pagetitle', replaceString(pagetitle))
     change('.pagecontent', replaceContents(postdef['soup']))
