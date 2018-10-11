@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 from wurmforge import WurmForge
 from pprint import PrettyPrinter
-from wurmpages import makeSimplePage, makeBlogPage
+from wurmpage.blog import makeBlogPage
+from wurmpage.simple import makeSimplePage
 from contextlib import contextmanager
 from os import getcwd, path, chdir
 
