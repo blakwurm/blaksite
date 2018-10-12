@@ -58,9 +58,11 @@ Each entry in the pages map is a map of information
 
 There must be a page under the "Home" key
 
-| Key  | Description                                                                |
-| ---- | -------------------------------------------------------------------------- |
-| type | Determines what information is required and how the page will be processed |
+| Key   | Description                                                                                |
+| ----- | ------------------------------------------------------------------------------------------ |
+| type  | Determines what information is required and how the page will be processed                 |
+| title | Displayed in the page's title, after the delimiter                                         |
+| url   | Directory where the site will be served from. At least one page must be the '/' directory. |
 
 ### 'simple'
 
@@ -69,9 +71,7 @@ Uses 'template/index.html' as template file
 | Key      | Description                                                                                                    |
 | -------- | -------------------------------------------------------------------------------------------------------------- |
 | source   | Path within the 'media' directory pointing to a markdown file, that will be rendered and displayed on the page |
-| title    | Displayed in the page's title, after the delimiter                                                             |
 | subtitle | Displayed on the page as the site's subtitle                                                                   |
-| url      | Directory where the site will be served from.                                                                  |
 
 ### 'blog'
 
@@ -81,9 +81,7 @@ If the 'address' field in sitesettings is not empty, an atom feed will be genera
 
 | Key           | Description                                                                                                                     |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| title         | Displayed in the page's title, after the delimiter                                                                              |
 | subtitle      | Displayed on the page as the site's subtitle                                                                                    |
-| url           | Directory where the site will be served from. At least one page must be the '/' directory.                                      |
 | author        | Main maintainer of the site. Used when 'author' is missing from post entry                                                      |
 | postslocation | Path within the 'media' directory where posts.json can be found                                                                 |
 | hidetag       | Posts with this tag will not be shown on the main blog overview. This tag will still be shown in the 'tags' section of the blog |
@@ -101,6 +99,14 @@ Each post must have the following information
 | author | The author of the post.                                                                                           |
 | source | A path relative to the folder containing posts.json, pointing to a markdown file containing the body of the post. |
 | tags   | A list of tags applicable to the post, used to organize posts and displayed as metadata along with each post.     |
+
+### 'external'
+
+Produces no pages, simply puts an external link into the navbar.
+
+| Key | Description                                                                      |
+| --- | -------------------------------------------------------------------------------- |
+| url | External URL. Must begin with a protocol identifier like 'http://' or 'https://' | 
 
 # Developing Templates 
 
