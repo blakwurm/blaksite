@@ -5,6 +5,8 @@
 - External Page type
 - Changelog
 ### Changed
+### Bugfixes
+- Blog summeries now get proper page titles
 
 
 ## [1] - 2018-10-07
