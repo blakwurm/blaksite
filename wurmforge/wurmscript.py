@@ -1,3 +1,4 @@
+from os import listdir
 
 def findscripts(forge):
-    pass
+    return listdir('scripts')
