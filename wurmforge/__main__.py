@@ -3,6 +3,7 @@ from wurmforge import WurmForge
 from pprint import PrettyPrinter
 from wurmpage.blog import makeBlogPage
 from wurmpage.simple import makeSimplePage
+from wurmpage.external import makeExternalPage
 from contextlib import contextmanager
 from os import getcwd, path, chdir
 
@@ -14,6 +15,7 @@ def main(workingdir = ".", debug:('prints more info', 'flag', 'd') = False):
             forge.debug_flag = debug
             forge.defPageMethod('simple', makeSimplePage)
             forge.defPageMethod('blog', makeBlogPage)
+            forge.defPageMethod('external', makeExternalPage)
             forge.makeSite()
     #pp.pprint(forge.strainMarkdown('siteintro.md'))
             if debug:

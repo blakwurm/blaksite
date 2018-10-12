@@ -8,7 +8,7 @@
   "assetlocation": "assets",
   "templatelocation": "template",
   "copyrightholder": "Site Operator",
-  "pageorder": ["Home", "Blak", "Wurm", "Foobar"],
+  "pageorder": ["Home", "Blak", "Wurm", "Domak", "Foobar"],
   "hosts": "",
   "pages": {
     "Blak": {
@@ -40,6 +40,11 @@
       "url": "foo_writes",
       "postslocation": "blog/foo",
       "hidetag": "politics"
+    },
+    "Domak": {
+      "type": "external",
+      "title": "Something Else",
+      "url": "https://www.google.com"
     }
   }
 }

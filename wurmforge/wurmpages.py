@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from gfm import gfm, markdown
 from json import dumps, loads
 from copy import copy
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 from re import compile
 from contextlib import suppress
 from itertools import tee, islice, chain
@@ -53,11 +53,15 @@ def makeNavList(forge, pageOn):
         li = blankbody.new_tag(name='li')
         if pageOn == pagekey:
             li['class'] = ["hello"]
-        a = blankbody.new_tag(name='a', href='/' + pagedata['url'])
+        a = blankbody.new_tag(name='a', href=__makeNavbarUrl(pagedata['url']))
         a.append(pagedata['title'])
         li.append(a)
         ul.append(li)
     return ul
+
+def __makeNavbarUrl(urlstring):
+    parsed = urlparse(urlstring)
+    return urlstring if parsed.scheme or parsed.netloc else '/' + urlstring
 
 def makePageTitle(forge, pagekey):
     """Returns the computed page title for use in <title>"""
