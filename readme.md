@@ -62,7 +62,7 @@ There must be a page under the "Home" key
 | ----- | ------------------------------------------------------------------------------------------ |
 | type  | Determines what information is required and how the page will be processed                 |
 | title | Displayed in the page's title, after the delimiter                                         |
-| url   | Directory where the site will be served from. At least one page must be the '/' directory. |
+| url   | Directory where the site will be served from. At least one page must be the '' directory. |
 
 ### 'simple'
 
