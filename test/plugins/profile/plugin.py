@@ -4,7 +4,7 @@ import os
 
 def pagemethod(forge, pagekey):
     """Page method for 'simple' page type"""
-    for i in forge.prog(['a'], 'Making ' + pagekey):
+    with forge.prog_one('Making ' + pagekey):
         pagedef, soup, change = makeStarterKit(forge, pagekey, 'profile.html')
         md1 = strainMarkdown(forge, pagedef['source'])
         change('.pagecontent', replaceContents(md1))

@@ -205,13 +205,14 @@ Setup: Clone the repository, and run pip install -r requirements.txt within the 
 
 Running: Execute runtest/runtest.bat, and check 'test/docs'. This *does not* run unit tests, but rather executes
 the program in debug mode against the test directory as a project. Unit tests are somewhat overkill for this program,
-as checking for accuracy can easily be done by examining the app's output.
+as checking for accuracy can easily be done by examining the app's output *and* the output
+is complex enough that detailed unit tests will themselves be difficult to maintain.
 
 Any new functionality must have a corresponding example in the test project.
 
-This project does not use semver. New releases fix bugs and introduce features, but never require more from the user unless they wish
-to use the new features. Sane defaults, careful initial design, etc. The sample_project.zip from v1.0 will be valid for all versions
-of this software. To facilitate this, releases that are deemed "harmful" can and will be pulled.
+This project does not use semver. After v1.0 launches, functionality will be locked,
+and new versions will never break compatability. Note that this project *is* in alpha, so functionality
+and the plugin api is still not locked down.
 
 [A good talk on breakage, though not 100% relivant to Python and a liiiiitle long winded](https://www.youtube.com/watch?v=oyLBGkS5ICk)
 
