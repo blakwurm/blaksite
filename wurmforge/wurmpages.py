@@ -123,6 +123,11 @@ def replaceString(newString):
         element.string.replaceWith(newString)
     return retFn
 
+def replaceProperty(property, newvalue):
+    def retFn(element):
+        element[property] = newvalue
+    return retFn
+
 def replaceHref(newHref):
     """For use with change_element, shortcut for replacing the ['href'] on an element"""
     def retFn(element):

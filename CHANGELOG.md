@@ -4,10 +4,13 @@
 ### Added
 - External Page type
 - Changelog
+- Plugins!
+- More general change helper
+- simple 'profile' example plugin 
 ### Changed
+- Readme now includes info about plugin dev
 ### Bugfixes
 - Blog summeries now get proper page titles
-- Add plugins!
 
 
 ## [1] - 2018-10-07

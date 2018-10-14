@@ -12,11 +12,12 @@
   "hosts": "",
   "pages": {
     "Blak": {
-      "type": "simple",
+      "type": "plugins/profile",
       "source": "blakprofile.md",
       "title": "Blak",
       "subtitle": "Dark as Night",
-      "url": "blak"
+      "url": "blak",
+      "profilepic": "https://i.imgur.com/p07Qpfc.jpg"
     },
     "Wurm": {
       "type": "simple",
