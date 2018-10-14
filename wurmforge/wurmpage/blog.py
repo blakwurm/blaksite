@@ -82,8 +82,8 @@ def makeBlogOverview(forge, pagekey, posts = [], url = ''):
     trueurl = url or pagedef['url']
     change('.taglist ul', replaceWith(makeTagUL(forge, pagekey, pagedef['tags'])))
     previewtemplate = soup.select_one('.postpreview').extract()
-    change('.pagetitle', replaceWith(pagedef['title']))
-    change('.pagesubtitle', replaceWith(pagedef['subtitle']))
+    change('.pagetitle', replaceContents(pagedef['title']))
+    change('.pagesubtitle', replaceContents(pagedef['subtitle']))
 
     for post in posts:
         slot = ___makeBlogOverviewSlot(forge, pagekey, post, copy(previewtemplate))
