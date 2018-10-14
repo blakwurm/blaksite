@@ -3,6 +3,7 @@ from urllib.parse import quote, urlparse
 import re
 import sys
 from importlib import import_module
+from contextlib import suppress
 
 def findpagemethod(forge, pluginpath):
     ns = import_module(pluginpath)
@@ -12,7 +13,6 @@ def loadplugins(forge):
     sys.path.append(getcwd())
     plugin_list = findplugins(forge)
     pluginresults = execplugins(forge, plugin_list)
-    print('pluginresults are ' + str(pluginresults))
     for pagekey, pagemethod in pluginresults.items():
         forge.defPageMethod(pagekey, pagemethod)
     return pluginresults
@@ -30,8 +30,14 @@ def execplugins(forge, plugin_list):
     results = {}
     for plugindir in plugin_list:
         pluginpath = plugindir.replace('/', '.') + '.plugin'
-        pagemethod = findpagemethod(forge, pluginpath)
-        results.update({plugindir: pagemethod})
+        try:
+            pagemethod = findpagemethod(forge, pluginpath)
+            results.update({plugindir: pagemethod})
+        except Exception as ex:
+            if forge.debug_flag:
+                print('Problem loading plugin: ' + str(ex))
+            else:
+                print("Problem loading plugin in " + plugindir)
     return results
 
 

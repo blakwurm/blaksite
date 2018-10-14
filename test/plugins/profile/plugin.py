@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 from wurmpages import *
-import plugins.profile.foo
 import os
 
 def pagemethod(forge, pagekey):
@@ -13,6 +12,4 @@ def pagemethod(forge, pagekey):
         change('.pagesubtitle', replaceString(pagedef['subtitle']))
         change('.profilepic', replaceProperty('href', pagedef['profilepic']))
     return {pagedef['url']: str(soup)}
-
-print(plugins.profile.foo.bar)
 
