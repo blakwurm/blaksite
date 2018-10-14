@@ -3,7 +3,7 @@ from gfm import gfm, markdown
 from json import dumps, loads
 from copy import copy
 from urllib.parse import quote, urlparse
-from re import compile
+import re
 from contextlib import suppress
 from itertools import tee, islice, chain
 from datetime import datetime
@@ -20,7 +20,7 @@ def templateSoupFor(forge, filename):
 
 def removeSpecialChars(stringToChange):
     """Given a string, removes all non-alphanumeric characters"""
-    reg = compile('[^a-zA-Z0-9]')
+    reg = re.compile('[^a-zA-Z0-9]')
     return reg.sub('', stringToChange)
 
 def markdownToSoup(markdownstring):

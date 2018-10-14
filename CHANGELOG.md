@@ -7,6 +7,7 @@
 ### Changed
 ### Bugfixes
 - Blog summeries now get proper page titles
+- Add plugins!
 
 
 ## [1] - 2018-10-07
