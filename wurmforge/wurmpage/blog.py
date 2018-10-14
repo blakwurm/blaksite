@@ -7,7 +7,7 @@ def makeBlogPage(forge, pagekey):
     pagedef, soup, change = makeStarterKit(forge, pagekey)
     rendermap = {}
     posts = grabBlogPosts(forge, pagekey)
-    posts.sort(key = lambda x: x['date'])
+    posts.sort(key = lambda x: x['date'], reverse = True)
     tags = getTagsIn(forge, posts)
     pagedef['tags'] = tags
     for formerpost, post, nextpost \
