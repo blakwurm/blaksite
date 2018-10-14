@@ -7,6 +7,7 @@ A terminal (command-line) program that transforms json and markdown into a stati
 ` wurmforge target/dir ` (defaults to current directory)
 
 Flag
+
 | flag | long        | description                                                      |
 | ---- | ----------- | ---------------------------------------------------------------- |
 | `-d` | `--debug`   | Program emits stack traces and other debugging information       |
