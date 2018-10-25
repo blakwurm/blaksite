@@ -6,7 +6,8 @@
 - Changelog
 - Plugins!
 - More general change helper
-- simple 'profile' example plugin 
+- Simple 'profile' example plugin 
+- Set up project to use virtual env
 ### Changed
 - Readme now includes info about plugin dev
 ### Bugfixes
