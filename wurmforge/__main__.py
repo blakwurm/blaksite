@@ -4,15 +4,20 @@ from pprint import PrettyPrinter
 from wurmpage.blog import makeBlogPage
 from wurmpage.simple import makeSimplePage
 from wurmpage.external import makeExternalPage
+from wurmscript import loadplugins
 from contextlib import contextmanager
 from os import getcwd, path, chdir
 
-def main(workingdir = ".", debug:('prints more info', 'flag', 'd') = False):
+def main(workingdir = ".",
+         plugins: ('enables plugins', 'flag', 'p') = False,
+         debug:('prints more info', 'flag', 'd') = False):
     try:
         with cd(workingdir):
             siteopts = "sitesettings.json"
             forge = WurmForge(siteopts)
             forge.debug_flag = debug
+            if plugins:
+                loadplugins(forge)
             forge.defPageMethod('simple', makeSimplePage)
             forge.defPageMethod('blog', makeBlogPage)
             forge.defPageMethod('external', makeExternalPage)

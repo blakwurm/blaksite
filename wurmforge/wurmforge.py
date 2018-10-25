@@ -3,6 +3,7 @@ from shutil import rmtree, copytree
 from pathlib import Path, PurePath
 from distutils.dir_util import copy_tree
 from progressbar import progressbar
+from contextlib import contextmanager
 
 
 def defaultPageFn(forge, pagekey):
@@ -27,11 +28,20 @@ class WurmForge:
             self.__parser__ = 'html5lib' 
             self.__tmpoutput__ = 'blaktmp'
 
+    """Software version, accessable to plugins. Versions under 1.0 are considered alpha."""
+    version = 0.1
+
     def prog(self, seq, desc): 
         """Takes an iterable and a description, returns an iterable that
         renders a progress bar to the command line."""
         print(desc)
         return progressbar(seq)
+
+    @contextmanager
+    def prog_one(self, message):
+        """Renders a 1-item progress bar on the screen when block exits"""
+        for i in self.prog(['a'], message):
+            yield
 
     def defPageMethod(self, pagetype, pagefn):
         """Adds a page method that dispatches on the given pagetype.
