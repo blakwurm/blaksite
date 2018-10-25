@@ -8,7 +8,8 @@ def main():
         rmtree('dist')
         rmtree('build')
         rmtree('test/docs')
-    system('pyinstaller wurmforge/__main__.py --onefile --clean --name "wurmforge" --icon=blakwurmlogo.ico')
+    system('env/scripts/pyinstaller wurmforge/__main__.py --onefile --clean --name "wurmforge" --icon=blakwurmlogo.ico')
+    system('env/bin/pyinstaller wurmforge/__main__.py --onefile --clean --name "wurmforge" --icon=blakwurmlogo.ico')
     make_archive('dist/sample_project', format='zip', root_dir='test')
     
 if __name__ == '__main__':
